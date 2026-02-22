@@ -1,22 +1,16 @@
 # StreamIt - The Ultimate Decision Killer
 
-<div align="center">
-  <img src="client/public/vite.svg" alt="StreamIt Logo" width="100"/>
-  <h3>Stop scrolling. Start streaming. Find your perfect movie in 3 steps.</h3>
-</div>
 
-## 📌 Features
+ Features
 
 - **Decision Engine Quiz:** Select your vibe (Genre, Era, Runtime, Actor) and instantly get exactly 3 curated suggestions.
 - **Cinematic UI/UX:** A gorgeous "A Life in Film" Letterboxd-style aesthetic featuring real-time interactive movie cards and fluid Framer Motion animations.
 - **Dynamic Cult Wall:** The landing page features a sprawling, generative CSS grid collage randomly populated with iconic, high-resolution Cult Classic movie backdrops fetched dynamically via the TMDB API.
 - **Streaming Availability:** Instantly know *where* to watch the suggestion (Netflix, Prime, Hulu, HBO) powered by Watchmode.
-- **Interactive Profile System:** Save your Watchlist, track your History, and favorite movies.
-- **Share Stats Card:** Generate and download high-resolution, pixel-perfect PNG share cards of your "All-Time Stats" to post on social media (powered by `html-to-image`).
 
 ---
 
-## 🚀 Tech Stack
+ Tech Stack
 
 - **Frontend:** React + Vite, Tailwind CSS (v4), Framer Motion, Lucide Icons, Axios.
 - **Backend:** Node.js, Express, Mongoose (MongoDB).
@@ -24,7 +18,7 @@
 
 ---
 
-## 🛠️ Local Development Setup
+ Local Development Setup
 
 To run StreamIt locally, you need two terminal windows running simultaneously—one for the frontend and one for the backend.
 
@@ -61,13 +55,13 @@ npm run dev
 
 ---
 
-## 📸 Screenshots
+📸 Screenshots
 
 *A cinematic landing page powered by TMDB.*
 *Dynamic "Share Stats" generator producing Letterboxd-style profile summaries.*
 
 ---
 
-## 🔒 Security
+🔒 Security
 - **API Keys are heavily protected:** All API logic runs on the backend server. The React client never exposes TMDB or Watchmode API keys to the browser, mitigating quota theft.
 - **Environment variables are `.gitignored`** so you don't leak secrets when pushing to GitHub.
