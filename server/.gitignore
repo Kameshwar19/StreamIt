@@ -1,0 +1,15 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+server_debug.log
+
+# Node
+node_modules/
+
+# Environment Variables - SECURITY RISK if pushed
+.env
+.env.local
+
+# OS
+.DS_Store
