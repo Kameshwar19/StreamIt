@@ -20,13 +20,36 @@
 
  Local Development Setup
 
-To run StreamIt locally, you need two terminal windows running simultaneously—one for the frontend and one for the backend.
+### Method 1: Docker (Recommended)
+The easiest way to run StreamIt locally is using Docker Compose.
 
-### 1. Prerequisites
+1.  **Prerequisites:** Install [Docker Desktop](https://www.docker.com/products/docker-desktop).
+2.  **Environment Variables:** Create a `.env` file in the root directory (you can copy `.env.example`).
+    ```env
+    PORT=5001
+    MONGO_URI=mongodb://database:27017/streamit
+    TMDB_API_KEY=your_tmdb_api_key_here
+    WATCHMODE_API_KEY=your_watchmode_api_key_here
+    ```
+3.  **Run:** Open a terminal in the project root and run:
+    ```bash
+    docker-compose up --build
+    ```
+4.  **Access:**
+    *   **Frontend:** `http://localhost` (Port 80)
+    *   **Backend API:** `http://localhost:5001`
+
+---
+
+### Method 2: Manual Setup
+
+To run StreamIt locally without Docker, you need two terminal windows running simultaneously.
+
+#### 1. Prerequisites
 - Node.js (v18+)
 - MongoDB (Running locally or a MongoDB Atlas URI)
 
-### 2. Backend Setup (`/server`)
+#### 2. Backend Setup (`/server`)
 
 Create a `.env` file in the `server` directory with the following keys:
 ```env
@@ -44,7 +67,7 @@ node index.js
 ```
 *(The backend runs on `http://localhost:5001`)*
 
-### 3. Frontend Setup (`/client`)
+#### 3. Frontend Setup (`/client`)
 Open a new terminal window:
 ```bash
 cd client
