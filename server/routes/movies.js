@@ -10,12 +10,6 @@ router.post('/search', async (req, res) => {
         const filters = req.body; // { genres, runtime, era, talent }
         console.log('Search Filters:', filters);
 
-        try {
-            fs.appendFileSync('server_debug.log', `${new Date().toISOString()} - Route /search hit with: ${JSON.stringify(filters)}\n`);
-        } catch (e) {
-            console.error("Route logging failed", e);
-        }
-
         // Fetch from TMDB
         const results = await tmdbService.getDiscoverMovies(filters);
 

@@ -1,5 +1,4 @@
 const axios = require('axios');
-const fs = require('fs');
 require('dotenv').config();
 
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
@@ -37,12 +36,6 @@ const searchPerson = async (name) => {
 };
 
 const getDiscoverMovies = async (filters) => {
-    try {
-        fs.appendFileSync('server_debug.log', `${new Date().toISOString()} - Request Received: ${JSON.stringify(filters)}\n`);
-    } catch (e) {
-        console.error("Logging failed", e);
-    }
-
     const { genres, runtime, era, talent } = filters;
 
     let params = {
@@ -141,10 +134,6 @@ const getDiscoverMovies = async (filters) => {
         const response = await tmdbClient.get('/discover/movie', { params });
         console.log('TMDB Results Count:', response.data.results.length);
 
-        fs.appendFileSync('server_debug.log', `${new Date().toISOString()} - Filters: ${JSON.stringify(filters)}\n`);
-        fs.appendFileSync('server_debug.log', `${new Date().toISOString()} - Params: ${JSON.stringify(params)}\n`);
-        fs.appendFileSync('server_debug.log', `${new Date().toISOString()} - Results: ${response.data.results.length}\n\n`);
-
         if (response.data.results.length === 0) {
             console.log('Zero results found. Attempting fallback...');
 
@@ -172,11 +161,6 @@ const getDiscoverMovies = async (filters) => {
         return response.data.results;
     } catch (error) {
         console.error("Caught error in getDiscoverMovies:", error.message);
-        try {
-            fs.appendFileSync('server_debug.log', `${new Date().toISOString()} - ERROR: ${error.message}\n\n`);
-        } catch (logError) {
-            console.error("Failed to write error log:", logError);
-        }
         throw error;
     }
 };
