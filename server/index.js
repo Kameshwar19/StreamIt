@@ -10,8 +10,25 @@ const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
-app.use(express.json());
-
+// Custom JSON Body Parser to bypass Vercel 'iconv-lite' encoding crash
+app.use((req, res, next) => {
+    if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
+        let data = '';
+        req.on('data', chunk => { data += chunk; });
+        req.on('end', () => {
+            try {
+                if (data) req.body = JSON.parse(data);
+                else req.body = {};
+                next();
+            } catch (e) {
+                console.error("Manual JSON Parse Error:", e);
+                res.status(400).json({ error: "Invalid JSON body" });
+            }
+        });
+    } else {
+        next();
+    }
+});
 // Database Connection
 // Database Connection
 console.log('Connecting to MongoDB at:', process.env.MONGO_URI ? process.env.MONGO_URI.replace(/\/\/.*@/, '//***@') : 'UNDEFINED');
