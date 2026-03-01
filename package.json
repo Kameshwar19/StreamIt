@@ -1,0 +1,15 @@
+{
+    "name": "streamit",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node server/index.js",
+        "dev": "npm run dev --workspace=client",
+        "build": "npm run build --workspace=client",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "workspaces": [
+        "client",
+        "server"
+    ]
+}
