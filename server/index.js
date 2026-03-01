@@ -16,9 +16,13 @@ app.use(express.json());
 // Database Connection
 console.log('Connecting to MongoDB at:', process.env.MONGO_URI ? process.env.MONGO_URI.replace(/\/\/.*@/, '//***@') : 'UNDEFINED');
 
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.error('MongoDB Connection Error:', err));
+if (process.env.MONGO_URI) {
+    mongoose.connect(process.env.MONGO_URI)
+        .then(() => console.log('MongoDB Connected'))
+        .catch(err => console.error('MongoDB Connection Error:', err));
+} else {
+    console.warn("MongoDB connection skipped due to missing MONGO_URI variable.");
+}
 
 // Routes
 app.get('/', (req, res) => {
