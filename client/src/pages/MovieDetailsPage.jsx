@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Play, ArrowLeft, Star, Calendar, Eye } from 'lucide-react';
 import { useRegion } from '../context/RegionContext';
-import api from '../api/axios';
+import { getMovieDetails } from '../api/tmdb';
+import { addToList } from './Profile';
 
 const MovieDetailsPage = () => {
     const { id } = useParams();
@@ -15,8 +16,8 @@ const MovieDetailsPage = () => {
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-                const response = await api.get(`/movies/${id}?region=${region}`);
-                setMovie(response.data);
+                const data = await getMovieDetails(id);
+                setMovie(data);
             } catch (error) {
                 console.error('Failed to fetch details', error);
             } finally {
@@ -24,7 +25,7 @@ const MovieDetailsPage = () => {
             }
         };
         fetchDetails();
-    }, [id, region]);
+    }, [id]);
 
     if (loading) return <div className="flex h-screen items-center justify-center text-2xl">Loading...</div>;
     if (!movie) return <div className="flex h-screen items-center justify-center text-2xl">Movie not found</div>;
@@ -34,7 +35,7 @@ const MovieDetailsPage = () => {
         : null;
 
     return (
-        <div className="min-h-screen bg-gray-900 pb-20">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20 transition-colors">
             {/* Hero Backdrop */}
             <div className="relative h-[60vh] w-full">
                 {backdropUrl && (
@@ -42,7 +43,7 @@ const MovieDetailsPage = () => {
                         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                         style={{ backgroundImage: `url(${backdropUrl})` }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-gray-50 dark:from-gray-900 via-gray-50/40 dark:via-gray-900/40 to-transparent transition-colors"></div>
                     </div>
                 )}
 
@@ -76,15 +77,15 @@ const MovieDetailsPage = () => {
 
                     {/* Synopsis & Info */}
                     <div>
-                        <h2 className="text-2xl font-bold mb-4 text-white">Synopsis</h2>
-                        <p className="text-lg text-gray-300 leading-relaxed mb-10">
+                        <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white transition-colors">Synopsis</h2>
+                        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-10 transition-colors">
                             {movie.overview}
                         </p>
 
                         {movie.genres && (
                             <div className="flex flex-wrap gap-2 mb-10">
                                 {movie.genres.map(g => (
-                                    <span key={g.id} className="px-3 py-1 bg-gray-800 rounded-full text-sm text-gray-300 border border-gray-700">
+                                    <span key={g.id} className="px-3 py-1 bg-gray-200 dark:bg-gray-800 rounded-full text-sm text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 transition-colors">
                                         {g.name}
                                     </span>
                                 ))}
@@ -93,9 +94,9 @@ const MovieDetailsPage = () => {
                     </div>
 
                     {/* Streaming Options */}
-                    <div className="bg-gray-800 p-6 rounded-2xl h-fit border border-gray-700 shadow-xl flex flex-col space-y-6">
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl h-fit border border-gray-200 dark:border-gray-700 shadow-xl flex flex-col space-y-6 transition-colors">
                         <div>
-                            <h3 className="text-xl font-bold mb-6 text-white border-b border-gray-700 pb-2">
+                            <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 transition-colors">
                                 Available On
                             </h3>
 
@@ -109,7 +110,7 @@ const MovieDetailsPage = () => {
                                             rel="noopener noreferrer"
                                             className={`flex items-center justify-center space-x-3 px-4 py-4 rounded-xl font-bold transition ${source.type === 'sub'
                                                 ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20'
-                                                : 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                                                : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-200'
                                                 }`}
                                         >
                                             <Play size={20} fill="currentColor" />
@@ -125,25 +126,16 @@ const MovieDetailsPage = () => {
                         </div>
 
                         {/* Already Watched Button */}
-                        <div className="pt-6 border-t border-gray-700">
+                        <div className="pt-6 border-t border-gray-200 dark:border-gray-700 transition-colors">
                             <button
-                                onClick={async () => {
+                                onClick={() => {
                                     if (isWatched) return;
-                                    try {
-                                        await api.post('/user/action', {
-                                            username: 'Watcher',
-                                            movieId: movie.id,
-                                            type: 'watched',
-                                            action: 'add'
-                                        });
-                                        setIsWatched(true);
-                                    } catch (err) {
-                                        console.error('Failed to mark as watched', err);
-                                    }
+                                    addToList('watched', movie.id);
+                                    setIsWatched(true);
                                 }}
                                 className={`w-full flex items-center justify-center space-x-3 px-4 py-4 rounded-xl font-bold transition-all ${isWatched
-                                    ? 'bg-green-600/20 text-green-500 border border-green-500'
-                                    : 'bg-gray-700 hover:bg-green-600 hover:text-white text-gray-200'
+                                    ? 'bg-green-100 dark:bg-green-600/20 text-green-700 dark:text-green-500 border border-green-500'
+                                    : 'bg-gray-100 dark:bg-gray-700 hover:bg-green-500 dark:hover:bg-green-600 hover:text-white text-gray-900 dark:text-gray-200'
                                     }`}
                             >
                                 <span>{isWatched ? 'Watched' : 'Mark as Watched'}</span>

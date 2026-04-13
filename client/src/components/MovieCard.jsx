@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Eye, Heart, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
-import api from '../api/axios';
+import { addToList } from '../pages/Profile';
 
 const MovieCard = ({ movie, onSelect, onWatched }) => {
     const [clickedActions, setClickedActions] = useState({
@@ -10,29 +10,18 @@ const MovieCard = ({ movie, onSelect, onWatched }) => {
         watchlist: false
     });
 
-    const handleAction = async (e, type) => {
+    const handleAction = (e, type) => {
         e.stopPropagation();
-
-        // Optimistic UI update
         setClickedActions(prev => ({ ...prev, [type]: true }));
-
         try {
-            await api.post('/user/action', {
-                username: 'Watcher', // Updated from demo
-                movieId: movie.id,
-                type: type,
-                action: 'add'
-            });
-
+            addToList(type, movie.id);
             if (type === 'watched') {
-                // Short delay to show the green button before the card animates away
                 setTimeout(() => {
                     if (onWatched) onWatched(movie.id);
                 }, 300);
             }
         } catch (error) {
             console.error('Action failed', error);
-            // Revert on failure
             setClickedActions(prev => ({ ...prev, [type]: false }));
         }
     };
@@ -44,14 +33,20 @@ const MovieCard = ({ movie, onSelect, onWatched }) => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.3 } }}
             whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.2 } }}
-            className="relative group bg-gray-800 rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:shadow-red-900/40 transition-shadow duration-300 w-full aspect-[2/3] mx-auto"
+            className="relative group bg-white dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:shadow-red-900/40 transition-shadow duration-300 w-full aspect-[2/3] mx-auto"
             onClick={() => onSelect(movie)}
         >
-            <img
-                src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://via.placeholder.com/500x750?text=No+Poster'}
-                alt={movie.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
+            {movie.poster_path ? (
+                <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt={movie.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+            ) : (
+                <div className="w-full h-full bg-gray-100 dark:bg-gray-900 flex items-center justify-center text-gray-400 dark:text-gray-600 font-medium transition-transform duration-500 group-hover:scale-110">
+                    No Poster
+                </div>
+            )}
 
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                 <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">{movie.title}</h3>

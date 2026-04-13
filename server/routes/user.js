@@ -51,10 +51,30 @@ router.post('/action', async (req, res) => {
                 // If adding to 'watched', update stats
                 if (type === 'watched') {
                     user.stats.totalWatched += 1;
-                    // Streak logic (simplified for MVP)
+                    // Streak logic
                     const today = new Date();
+                    const justDateToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                    
+                    const lastWatched = user.stats.streak.lastWachedDate;
+                    if (lastWatched) {
+                        const lastDate = new Date(lastWatched.getFullYear(), lastWatched.getMonth(), lastWatched.getDate());
+                        const diffTime = Math.abs(justDateToday - lastDate);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        
+                        if (diffDays === 1) {
+                            user.stats.streak.current += 1;
+                        } else if (diffDays > 1) {
+                            // Streak broken
+                            user.stats.streak.current = 1;
+                        }
+                    } else {
+                        user.stats.streak.current = 1;
+                    }
+                    
+                    if (user.stats.streak.current > user.stats.streak.longest) {
+                        user.stats.streak.longest = user.stats.streak.current;
+                    }
                     user.stats.streak.lastWachedDate = today;
-                    // TODO: Calculate actual steak based on dates
                 }
             }
         } else if (action === 'remove') {

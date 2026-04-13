@@ -54,18 +54,18 @@ const QuizForm = ({ customSubmit }) => {
     };
 
     return (
-        <div className="w-full max-w-3xl bg-gray-800 p-12 rounded-3xl shadow-2xl border border-gray-700">
+        <div className="w-full max-w-3xl bg-white dark:bg-gray-800 p-12 rounded-3xl shadow-xl dark:shadow-2xl border border-gray-200 dark:border-gray-700 transition-colors">
             {step === 1 && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <h2 className="text-3xl font-semibold mb-8 text-white">Choose your vibe</h2>
+                    <h2 className="text-3xl font-semibold mb-8 text-gray-900 dark:text-white">Choose your vibe</h2>
                     <div className="flex flex-wrap gap-5 mb-10">
                         {GENRES.map(g => (
                             <button
                                 key={g.id}
                                 onClick={() => toggleGenre(g.id)}
                                 className={`px-6 py-3 text-lg rounded-full border transition ${filters.genres.includes(g.id)
-                                    ? 'bg-red-600 border-red-600 text-white'
-                                    : 'border-gray-600 text-gray-300 hover:border-red-500'
+                                    ? 'bg-red-600 border-red-600 text-white shadow-md'
+                                    : 'bg-gray-50 dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-red-500'
                                     }`}
                             >
                                 {g.name}
@@ -75,7 +75,7 @@ const QuizForm = ({ customSubmit }) => {
                     <button
                         onClick={() => setStep(2)}
                         disabled={filters.genres.length === 0}
-                        className="w-full bg-white text-black py-4 text-xl rounded-2xl font-bold hover:bg-gray-200 disabled:opacity-50 transition-colors"
+                        className="w-full bg-gray-900 dark:bg-white text-white dark:text-black py-4 text-xl rounded-2xl font-bold hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 transition-colors"
                     >
                         Next
                     </button>
@@ -84,7 +84,7 @@ const QuizForm = ({ customSubmit }) => {
 
             {step === 2 && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <h2 className="text-3xl font-semibold mb-6 text-white">How much time? (Select multiple)</h2>
+                    <h2 className="text-3xl font-semibold mb-6 text-gray-900 dark:text-white">How much time? (Select multiple)</h2>
                     <div className="flex flex-wrap gap-5 mb-10">
                         {RUNTIMES.map(r => (
                             <button
@@ -104,8 +104,8 @@ const QuizForm = ({ customSubmit }) => {
                                     });
                                 }}
                                 className={`px-6 py-3 rounded-xl border text-lg transition ${(Array.isArray(filters.runtime) && filters.runtime.includes(r.id))
-                                    ? 'bg-red-600 border-red-600 text-white'
-                                    : 'border-gray-600 text-gray-300 hover:border-red-500'
+                                    ? 'bg-red-600 border-red-600 text-white shadow-md'
+                                    : 'bg-gray-50 dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-red-500'
                                     }`}
                             >
                                 {r.name}
@@ -113,7 +113,7 @@ const QuizForm = ({ customSubmit }) => {
                         ))}
                     </div>
 
-                    <h2 className="text-3xl font-semibold mb-6 text-white">Which Era? (Select multiple)</h2>
+                    <h2 className="text-3xl font-semibold mb-6 text-gray-900 dark:text-white">Which Era? (Select multiple)</h2>
                     <div className="flex flex-wrap gap-5 mb-10">
                         {ERAS.map(e => (
                             <button
@@ -133,8 +133,8 @@ const QuizForm = ({ customSubmit }) => {
                                     });
                                 }}
                                 className={`px-6 py-3 rounded-xl border text-lg transition ${(Array.isArray(filters.era) && filters.era.includes(e.id))
-                                    ? 'bg-red-600 border-red-600 text-white'
-                                    : 'border-gray-600 text-gray-300 hover:border-red-500'
+                                    ? 'bg-red-600 border-red-600 text-white shadow-md'
+                                    : 'bg-gray-50 dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-red-500'
                                     }`}
                             >
                                 {e.name}
@@ -148,21 +148,21 @@ const QuizForm = ({ customSubmit }) => {
                             (!filters.runtime || filters.runtime.length === 0) ||
                             (!filters.era || filters.era.length === 0)
                         }
-                        className="w-full bg-white text-black py-4 text-xl rounded-2xl font-bold hover:bg-gray-200 disabled:opacity-50 transition-colors"
+                        className="w-full bg-gray-900 dark:bg-white text-white dark:text-black py-4 text-xl rounded-2xl font-bold hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 transition-colors"
                     >
                         Next
                     </button>
-                    <button onClick={() => setStep(1)} className="w-full mt-4 text-lg text-gray-500 hover:text-white transition-colors">Back</button>
+                    <button onClick={() => setStep(1)} className="w-full mt-4 text-lg text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">Back</button>
                 </motion.div>
             )}
 
             {step === 3 && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <h2 className="text-3xl font-semibold mb-6 text-white">Any specific star? (Optional)</h2>
+                    <h2 className="text-3xl font-semibold mb-6 text-gray-900 dark:text-white">Any specific star? (Optional)</h2>
                     <input
                         type="text"
                         placeholder="e.g. Leonardo DiCaprio"
-                        className="w-full p-6 text-xl bg-gray-900 border border-gray-700 rounded-2xl text-white mb-10 focus:outline-none focus:border-red-500 transition-colors"
+                        className="w-full p-6 text-xl bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-2xl text-gray-900 dark:text-white mb-10 focus:outline-none focus:border-red-500 transition-colors"
                         onChange={(e) => updateFilter('talent', e.target.value)}
                     />
 
@@ -172,7 +172,7 @@ const QuizForm = ({ customSubmit }) => {
                     >
                         Find Movies
                     </button>
-                    <button onClick={() => setStep(2)} className="w-full mt-6 text-xl text-gray-500 hover:text-white transition-colors">Back</button>
+                    <button onClick={() => setStep(2)} className="w-full mt-6 text-xl text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">Back</button>
                 </motion.div>
             )}
         </div>

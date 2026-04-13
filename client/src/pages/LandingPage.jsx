@@ -33,7 +33,7 @@ const LandingPage = () => {
     }, []);
 
     return (
-        <div className="relative h-screen w-full overflow-hidden bg-black">
+        <div className="relative h-screen w-full overflow-hidden bg-white dark:bg-black transition-colors">
             {/* Background Collage Wall */}
             <motion.div
                 initial={{ opacity: 0 }}
@@ -44,7 +44,7 @@ const LandingPage = () => {
                 {/* 27 images grid fitting roughly what's visible */}
                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-3 lg:gap-4 transform -rotate-12 scale-150 -translate-y-[10%] opacity-100 pointer-events-none">
                     {wallImages.map((src, idx) => (
-                        <div key={idx} className="relative aspect-video rounded-md flex-shrink-0 bg-gray-900 border border-gray-800 shadow-xl overflow-hidden shadow-black/50">
+                        <div key={idx} className="relative aspect-video rounded-md flex-shrink-0 bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 shadow-xl overflow-hidden shadow-gray-200/50 dark:shadow-black/50 transition-colors">
                             <img src={src} alt="Cult Backdrop" className="w-full h-full object-cover" loading="lazy" />
                         </div>
                     ))}
@@ -52,7 +52,7 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Gradient Overlay (Slightly lighter to let more image pop) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/80 to-white/95 dark:from-black/60 dark:via-black/40 dark:to-black/80 transition-colors"></div>
 
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
@@ -69,7 +69,7 @@ const LandingPage = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-xl md:text-2xl text-gray-200 max-w-2xl mb-10 font-light"
+                    className="text-xl md:text-2xl text-gray-700 dark:text-gray-200 max-w-2xl mb-10 font-light transition-colors"
                 >
                     The ultimate decision killer. Find your perfect movie in seconds, not hours.
                 </motion.p>

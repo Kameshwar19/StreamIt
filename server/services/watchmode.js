@@ -1,5 +1,6 @@
 const axios = require('axios');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const WATCHMODE_BASE_URL = 'https://api.watchmode.com/v1';
 const WATCHMODE_API_KEY = process.env.WATCHMODE_API_KEY;

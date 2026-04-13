@@ -8,29 +8,38 @@ import { Loader2 } from 'lucide-react';
 
 const SelectionPage = () => {
     const navigate = useNavigate();
-    const [movies, setMovies] = useState(() => JSON.parse(sessionStorage.getItem('streamit_movies')) || []);
+    const [movies, setMovies] = useState(() => {
+        try { return JSON.parse(sessionStorage.getItem('streamit_movies')) || []; } catch { return []; }
+    });
     const [loading, setLoading] = useState(false);
-    const [showResults, setShowResults] = useState(() => JSON.parse(sessionStorage.getItem('streamit_showResults')) || false);
-    const [index, setIndex] = useState(() => parseInt(sessionStorage.getItem('streamit_index')) || 0);
+    const [showResults, setShowResults] = useState(() => {
+        try { return JSON.parse(sessionStorage.getItem('streamit_showResults')) || false; } catch { return false; }
+    });
+    const [index, setIndex] = useState(() => {
+        try { return parseInt(sessionStorage.getItem('streamit_index')) || 0; } catch { return 0; }
+    });
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        sessionStorage.setItem('streamit_movies', JSON.stringify(movies));
-        sessionStorage.setItem('streamit_showResults', JSON.stringify(showResults));
-        sessionStorage.setItem('streamit_index', index.toString());
+        try {
+            sessionStorage.setItem('streamit_movies', JSON.stringify(movies));
+            sessionStorage.setItem('streamit_showResults', JSON.stringify(showResults));
+            sessionStorage.setItem('streamit_index', index.toString());
+        } catch { /* ignore */ }
     }, [movies, showResults, index]);
 
     const handleSearch = async (filters) => {
         setLoading(true);
         setShowResults(true);
+        setError(null);
         try {
-            const userRes = await api.get('/user/demo');
-            const watchedIds = userRes.data.watched || [];
             const response = await api.post('/movies/search', filters);
-            const filteredMovies = response.data.filter(m => !watchedIds.includes(String(m.id)));
-            setMovies(filteredMovies);
+            setMovies(response.data);
             setIndex(0);
-        } catch (error) {
-            console.error('Fetch error', error);
+        } catch (err) {
+            console.error('Fetch error', err);
+            setError('Failed to fetch movies. Please try again.');
+            setMovies([]);
         } finally {
             setLoading(false);
         }
@@ -46,9 +55,7 @@ const SelectionPage = () => {
         hidden: { opacity: 0 },
         show: {
             opacity: 1,
-            transition: {
-                staggerChildren: 0.15
-            }
+            transition: { staggerChildren: 0.15 }
         }
     };
 
@@ -68,8 +75,8 @@ const SelectionPage = () => {
             ) : (
                 <div className="w-full flex flex-col items-center max-w-7xl">
                     <button
-                        onClick={() => setShowResults(false)}
-                        className="self-start mb-8 text-gray-400 hover:text-white transition flex items-center space-x-2"
+                        onClick={() => { setShowResults(false); setMovies([]); setIndex(0); }}
+                        className="self-start mb-8 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition flex items-center space-x-2"
                     >
                         <span>← Change Preferences</span>
                     </button>
@@ -77,7 +84,12 @@ const SelectionPage = () => {
                     {loading ? (
                         <div className="flex flex-col items-center justify-center h-96">
                             <Loader2 size={48} className="animate-spin text-red-600 mb-4" />
-                            <p className="text-xl text-gray-400 animate-pulse">Scanning the multiverse...</p>
+                            <p className="text-xl text-gray-500 dark:text-gray-400 animate-pulse">Scanning the multiverse...</p>
+                        </div>
+                    ) : error ? (
+                        <div className="text-xl text-red-500 dark:text-red-400 mt-10 text-center">
+                            <p>{error}</p>
+                            <button onClick={() => setShowResults(false)} className="mt-4 text-red-600 dark:text-red-500 hover:underline">Try again</button>
                         </div>
                     ) : (
                         <>
@@ -100,9 +112,9 @@ const SelectionPage = () => {
                             </motion.div>
 
                             {visibleMovies.length === 0 && (
-                                <div className="text-xl text-gray-400 mt-10 text-center">
+                                <div className="text-xl text-gray-500 dark:text-gray-400 mt-10 text-center">
                                     <p>No movies matched your specific vibe.</p>
-                                    <button onClick={() => setShowResults(false)} className="mt-4 text-red-500 hover:underline">Try broader filters</button>
+                                    <button onClick={() => setShowResults(false)} className="mt-4 text-red-600 dark:text-red-500 hover:underline">Try broader filters</button>
                                 </div>
                             )}
 
@@ -113,7 +125,7 @@ const SelectionPage = () => {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={handleNext}
-                                    className="mt-6 px-10 py-3 bg-gradient-to-r from-gray-800 to-gray-700 rounded-full border border-gray-600 hover:border-gray-500 text-white font-bold shadow-lg transition-all"
+                                    className="mt-6 px-10 py-3 bg-white dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-700 rounded-full border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 text-gray-900 dark:text-white font-bold shadow-lg transition-all"
                                 >
                                     Show Next 3 Suggestions
                                 </motion.button>

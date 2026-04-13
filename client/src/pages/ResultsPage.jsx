@@ -21,27 +21,11 @@ const ResultsPage = () => {
             setLoading(true);
             setError(null);
             try {
-                // Fetch user's watched list first to exclude them
-                const userRes = await api.get('/user/demo');
-                const watchedIds = userRes.data.watched || [];
-
                 const response = await api.post('/movies/search', filters);
-
-                // Filter out watched movies - REMOVED per user request to show all results
-                // const filteredMovies = response.data.filter(m => !watchedIds.includes(String(m.id)));
-
                 setMovies(response.data);
             } catch (err) {
                 console.error('Fetch error', err);
-                // Fallback if user fetch fails
-                try {
-                    const response = await api.post('/movies/search', filters);
-                    setMovies(response.data);
-                } catch (fallbackErr) {
-                    console.error('Fallback error', fallbackErr);
-                    // Show detailed error to help user debug network issues
-                    setError(`Connection failed: ${fallbackErr.message || 'Unknown Error'}. Ensure backend is running at ${api.defaults.baseURL}`);
-                }
+                setError(`Failed to fetch movies: ${err.message}`);
             } finally {
                 setLoading(false);
             }
