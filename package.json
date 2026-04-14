@@ -2,6 +2,7 @@
   "name": "streamit",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://streamitapp.vercel.app/",
   "scripts": {
     "start": "node server/index.js",
     "dev:server": "node server/index.js",

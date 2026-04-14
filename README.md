@@ -3,6 +3,8 @@
 <div align="center">
   <img src="client/public/vite.svg" alt="StreamIt Logo" width="100"/>
   <h3>Stop scrolling. Start streaming. Find your perfect movie in 3 steps.</h3>
+  <br/>
+  <a href="https://streamitapp.vercel.app/"><strong>🎬 Play StreamIt Now 🎬</strong></a>
 </div>
 
 ## 📌 Features
